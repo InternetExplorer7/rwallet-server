@@ -2,6 +2,7 @@ import { version } from '../../package.json';
 import { Router } from 'express';
 import facets from './facets';
 import { RippleAPI } from 'ripple-lib';
+import price from 'crypto-price';
 
 const r_api = new RippleAPI({
   server: 'wss://s1.ripple.com' // Public ripple server
@@ -59,7 +60,18 @@ export default ({ config, db }) => {
 			console.log('done and disconnected.')
 		}).catch(console.error);
 		
-	})
+	});
+
+	api.get('/ripple/getPrice', (req, res) => {
+		const base = 'USD';
+		const crypto = 'XRP';
+		price.getBasePrice(base, crypto)
+			.then(obj => {
+				console.log(obj.price);
+			}).catch(err => {
+				console.log('error getting price: ' + err);
+			})
+	});
 
 	return api;
 }
