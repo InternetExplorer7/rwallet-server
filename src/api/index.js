@@ -62,12 +62,13 @@ export default ({ config, db }) => {
 		
 	});
 
-	api.get('/ripple/getPrice', (req, res) => {
-		const base = 'USD';
-		const crypto = 'XRP';
+	api.post('/ripple/getPrice', (req, res) => {
+		const base = 'XRP';
+		const crypto = 'USD';
 		price.getBasePrice(base, crypto)
 			.then(obj => {
-				console.log(obj.price);
+				console.log(JSON.stringify(obj));
+				res.send(obj);
 			}).catch(err => {
 				console.log('error getting price: ' + err);
 			})
